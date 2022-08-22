@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../style.dart';
 import 'components/body.dart';
 
 class GamesScreen extends StatelessWidget {
@@ -8,6 +9,7 @@ class GamesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Style.colorLightGray,
       body: Body(),
     );
   }

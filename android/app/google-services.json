@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704265140215",
+    "project_id": "fuza-app",
+    "storage_bucket": "fuza-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704265140215:android:a104c923cce708b9b260f2",
+        "android_client_info": {
+          "package_name": "com.example.fuza_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704265140215-n821r2loflqg81b604vehgv6epj8ufa1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0q6sXT7RQ3wOSd6uL5FOF5IQo7hq-oEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704265140215-n821r2loflqg81b604vehgv6epj8ufa1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
