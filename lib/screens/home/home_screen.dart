@@ -23,14 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Style.colorBlue,
-        centerTitle: true,
-        title: Text(
-          "Futsal škola Zagi",
-          style: Style.getTextStyle(context, StyleText.bodyTwoMedium, StyleColor.white),
-        ),
-      ),
       backgroundColor: Style.colorLightGray,
       body: getBody(),
       bottomNavigationBar: _buildBottomBar(),

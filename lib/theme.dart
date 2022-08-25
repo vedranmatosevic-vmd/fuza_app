@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuza_app/style.dart';
 
 ThemeData theme() {
   return ThemeData(
@@ -6,7 +7,9 @@ ThemeData theme() {
     fontFamily: "Muli",
     appBarTheme: appBarTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-  );
+  ).copyWith(colorScheme: ThemeData().colorScheme.copyWith(
+    primary: Style.colorDarkGray
+  ));
 }
 
 AppBarTheme appBarTheme() {
