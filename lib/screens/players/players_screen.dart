@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/add_player_dialog.dart';
+import 'components/add_player_dialog.dart';
 import '../../style.dart';
 import 'components/body.dart';
 
@@ -32,12 +32,13 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   IconButton buildIActions() {
     return IconButton(
-            onPressed: () {_addPlayer();},
-            icon: const Icon(
-              Icons.add,
-              color: Style.colorWhite,
-            )
-        );
+        onPressed: () {
+          _addPlayer();
+        },
+        icon: const Icon(
+          Icons.add,
+          color: Style.colorWhite,
+        ));
   }
 
   void _addPlayer() {

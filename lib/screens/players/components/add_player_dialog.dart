@@ -5,7 +5,7 @@ import 'package:fuza_app/repository/data_repository.dart';
 import 'package:fuza_app/size_config.dart';
 import 'package:intl/intl.dart';
 
-import '../style.dart';
+import '../../../style.dart';
 
 class AddPlayerDialog extends StatefulWidget {
   const AddPlayerDialog({Key? key}) : super(key: key);
@@ -48,7 +48,9 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
                 TextButton(
                   onPressed: () {
                     debugPrint("Vedran... name: $name last name: $lastName");
-                    DateTime newBDay = DateFormat("dd.MM.yyyy").parse(_bDayController.text);
+                    DateTime? newBDay = _bDayController.text.isEmpty
+                        ? DateFormat("dd.MM.yyyy").parse("1.1.1990")
+                        : DateFormat("dd.MM.yyyy").parse(_bDayController.text);
                     if (_nameController.text.isNotEmpty && _lastNameController.text.isNotEmpty) {
                       final newPlayer = Player(name: _nameController.text, lastName: _lastNameController.text, bDay: newBDay);
                       repository.addPlayer(newPlayer);
@@ -107,6 +109,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
   TextField buildLastNameFormField(BuildContext context) {
     return TextField(
       controller: _lastNameController,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Prezime',
         labelStyle: Style.getTextStyle(
@@ -133,6 +136,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
   TextField buildNameFormField(BuildContext context) {
     return TextField(
       controller: _nameController,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Ime',
         labelStyle: Style.getTextStyle(
