@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:fuza_app/models/MembershipFee.dart';
 import 'package:fuza_app/models/Player.dart';
 import 'package:fuza_app/repository/data_repository.dart';
 import 'package:fuza_app/size_config.dart';
@@ -17,23 +18,21 @@ class AddMembershipFeeDialog extends StatefulWidget {
 
 class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
   final DataRepository repository = DataRepository();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _bDayController = TextEditingController();
-  String? name;
-  String? lastName;
-  DateTime? bDay;
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _monthController = TextEditingController();
+  final TextEditingController _remarkController = TextEditingController();
+  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Dodaj igrača',
+        'Nova članarina',
         style: Style.getTextStyle(
             context, StyleText.headlineThreeMedium, StyleColor.black),
       ),
       content: StreamBuilder<QuerySnapshot>(
-        stream: repository.getStream(),
+        stream: repository.getPlayersStream(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const LinearProgressIndicator();
 
@@ -44,61 +43,78 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
   }
 
   SingleChildScrollView buildSingleChildScrollView(BuildContext context, List<DocumentSnapshot>? snapshot) {
-    List<String> players = [];
+    List<Player> players = [];
     for (var element in snapshot!) {
       final player = Player.fromSnapshot(element);
-      players.add("${player.name} ${player.lastName}");
+      players.add(player);
     }
-    String? selectedValue = players[0];
     return SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
               SizedBox(height: getProportionalScreenHeight(32.0),),
-              buildNameFormField(context),
-              DropdownButtonFormField2(
-                decoration: InputDecoration(
-                    labelStyle: Style.getTextStyle(
-                        context, StyleText.bodyThreeRegular, StyleColor.darkGray),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Style.colorGray)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Style.colorDarkGray)),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Style.colorGray)),
-                ),
-                items: players.map((e) => DropdownMenuItem<String>(
-                  value: e,
+              // buildNameFormField(context),
+              DropdownButtonHideUnderline(
+                child: DropdownButtonFormField2(
+                  hint: Text("Igrač", style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero
+                  ),
+                  style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                  buttonHeight: 60,
+                  buttonWidth: 160,
+                  buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                  buttonDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      color: Colors.black26,
+                    ),
+                  ),
+                  items: players.map((player) => DropdownMenuItem<String>(
+                    value: player.toString(),
                     child: Text(
-                      e,
+                      player.toString(),
                     )
-                )).toList(),
-                value: selectedValue,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue = value as String;
-                  });
-                },
+                  )).toList(),
+                  value: selectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value as String?;
+                      // TODO VEDRAN find way to save player
+                    });
+                  },
+                ),
               ),
               SizedBox(height: getProportionalScreenHeight(16.0),),
               buildMonthFormField(context),
               SizedBox(height: getProportionalScreenHeight(16.0),),
               buildAmountFormField(context),
+              SizedBox(height: getProportionalScreenHeight(16.0),),
+              buildRemarkFormField(context),
               SizedBox(height: getProportionalScreenHeight(32.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      debugPrint("Vedran... name: $name last name: $lastName");
-                      DateTime? newBDay = _bDayController.text.isEmpty
-                          ? DateFormat("dd.MM.yyyy").parse("1.1.1990")
-                          : DateFormat("dd.MM.yyyy").parse(_bDayController.text);
-                      if (_nameController.text.isNotEmpty && _lastNameController.text.isNotEmpty) {
-                        final newPlayer = Player(name: _nameController.text, lastName: _lastNameController.text, bDay: newBDay);
-                        repository.addPlayer(newPlayer);
+                      debugPrint("Vedran... user: $selectedValue");
+                      Player? newPlayer;
+                      for (var element in players) {
+                        if (element.equals(selectedValue!)) {
+                          newPlayer = element;
+                        }
+                      }
+                      final listOfPlayers = <Player>[];
+                      listOfPlayers.add(newPlayer!);
+                      if (_amountController.text.isNotEmpty && _monthController.text.isNotEmpty) {
+                        final newMembershipFee = MembershipFee(
+                            value: int.parse(_amountController.text),
+                            players: listOfPlayers,
+                            dateOfPayment: DateTime.now(),
+                            description: _remarkController.text,
+                            month: int.parse(_monthController.text)
+                        );
+                        repository.addMembershipFee(newMembershipFee);
                         Navigator.of(context).pop();
                       }
                     },
@@ -114,9 +130,37 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
         );
   }
 
+  TextField buildRemarkFormField(BuildContext context) {
+    return TextField(
+              controller: _remarkController,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: 'Napomena',
+                labelStyle: Style.getTextStyle(
+                    context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Style.colorGray)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Style.colorDarkGray)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Style.colorGray)),
+              ),
+              minLines: 2,
+              maxLines: 2,
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.text,
+              cursorColor: Style.colorDarkGray,
+              style: Style.getTextStyle(
+                  context, StyleText.bodyTwoRegular, StyleColor.darkGray),
+            );
+  }
+
   TextField buildMonthFormField(BuildContext context) {
     return TextField(
-      controller: _bDayController,
+      controller: _monthController,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Mjesec',
@@ -140,7 +184,7 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
         counterText: ""
       ),
       minLines: 1,
-      textInputAction: TextInputAction.done,
+      textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       maxLength: 2,
       cursorColor: Style.colorDarkGray,
@@ -151,7 +195,7 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
 
   TextField buildAmountFormField(BuildContext context) {
     return TextField(
-      controller: _lastNameController,
+      controller: _amountController,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Iznos',
@@ -172,40 +216,6 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
       minLines: 1,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      cursorColor: Style.colorDarkGray,
-      style: Style.getTextStyle(
-          context, StyleText.bodyTwoRegular, StyleColor.darkGray),
-    );
-  }
-
-  TextField buildNameFormField(BuildContext context) {
-    return TextField(
-      controller: _nameController,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        labelText: 'Član',
-        labelStyle: Style.getTextStyle(
-            context, StyleText.bodyThreeRegular, StyleColor.darkGray),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(color: Style.colorGray)),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(color: Style.colorDarkGray)),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(color: Style.colorGray)),
-        suffixIcon: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              color: Style.colorDarkGray,
-            )
-        )
-      ),
-      minLines: 1,
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.name,
       cursorColor: Style.colorDarkGray,
       style: Style.getTextStyle(
           context, StyleText.bodyTwoRegular, StyleColor.darkGray),

@@ -2,29 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'Player.dart';
 
-enum Months {
-  aug,
-  sep,
-  oct,
-  nov,
-  dec,
-  yan,
-  feb,
-  mar,
-  apr,
-  may,
-  jun,
-  jul
-}
-
 class MembershipFee {
+  String? id;
   final int value;
   final List<Player> players;
   final DateTime dateOfPayment;
   final String? description;
-  final String month;
+  final int month;
 
   MembershipFee({
+    this.id,
     required this.value,
     required this.players,
     required this.dateOfPayment,
@@ -34,6 +21,7 @@ class MembershipFee {
 
   factory MembershipFee.fromSnapshot(DocumentSnapshot snapshot) {
     final newMembershipFee = MembershipFee.fromJson(snapshot.data() as Map<String, dynamic>);
+    newMembershipFee.id = snapshot.reference.id;
     return newMembershipFee;
   }
 
@@ -52,7 +40,7 @@ MembershipFee _membershipFeeFromJson(Map<String, dynamic> json) {
     value: json['value'] as int,
     dateOfPayment: (json['dateOfPayment'] as Timestamp).toDate(),
     description: json['description'] as String,
-    month: json['month'] as String,
+    month: json['month'] as int,
     players: _convertPlayers(json['players'] as List<dynamic>)
   );
 }

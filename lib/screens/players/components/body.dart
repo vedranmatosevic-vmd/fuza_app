@@ -20,10 +20,9 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: repository.getStream(),
+      stream: repository.getPlayersStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const LinearProgressIndicator();
-
         return _buildList(context, snapshot.data?.docs ?? []);
       }
     );
@@ -41,5 +40,3 @@ class _BodyState extends State<Body> {
     return PlayerCard(player: player);
   }
 }
-
-
