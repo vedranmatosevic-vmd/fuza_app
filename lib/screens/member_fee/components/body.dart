@@ -48,7 +48,6 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
       stream: repository.getMemberShipFeesStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const LinearProgressIndicator();
-
         return _buildList(context, snapshot.data?.docs ?? []);
       }
     );
