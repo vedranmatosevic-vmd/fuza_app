@@ -118,7 +118,6 @@ class MembershipFeeByMonthCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-
                 Text(
                   '${months[month - 1]}, $year.',
                   style: Style.getTextStyle(context, StyleText.headlineThreeMedium, StyleColor.extraDarkGray),

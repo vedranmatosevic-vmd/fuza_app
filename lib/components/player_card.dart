@@ -12,7 +12,7 @@ class PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20.0)),
+      padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0)),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
