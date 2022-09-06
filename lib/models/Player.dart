@@ -29,9 +29,11 @@ class Player {
   }
 
   bool equals(String value) {
-    final name = value.split(" ")[0];
-    final lastName = value.split(" ")[1];
-    return this.name == name && this.lastName == lastName;
+    return value == toString();
+  }
+
+  String bDayToString() {
+    return "${bDay?.day}.${bDay?.month}.${bDay?.year}.";
   }
 }
 

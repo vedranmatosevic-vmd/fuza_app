@@ -38,4 +38,8 @@ class DataRepository {
   void deleteMembershipFee(MembershipFee membershipFee) async {
     await membershipFeeCollection.doc(membershipFee.id).delete();
   }
+
+  Stream<QuerySnapshot> getMemberShipFeesByMonthStream(int month) {
+    return membershipFeeCollection.where('month', isEqualTo: month).snapshots();
+  }
 }

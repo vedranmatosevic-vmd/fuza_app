@@ -21,15 +21,15 @@ class PlayerCard extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
-                  width: 54.0,
-                  height: 54.0,
+                  width: 34.0,
+                  height: 34.0,
                   decoration: BoxDecoration(
                       color: Style.colorLightGray,
                       borderRadius: BorderRadius.circular(27.0)
                   ),
                   child: const Icon(
                     Icons.person,
-                    size: 42.0,
+                    size: 32.0,
                     color: Style.colorWhite,
                   ),
                 ),
@@ -39,25 +39,25 @@ class PlayerCard extends StatelessWidget {
                   children: [
                     Text(
                       "${player.name} ${player.lastName}",
-                      style: Style.getTextStyle(context, StyleText.bodyTwoMedium, StyleColor.black),
+                      style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.black),
                     ),
                     SizedBox(height: getProportionalScreenHeight(4.0),),
                     Text(
                       player.bDay != null ? "${player.bDay?.day}.${player.bDay?.month}.${player.bDay?.year}" : "",
-                      style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                      style: Style.getTextStyle(context, StyleText.bodyFourRegular, StyleColor.darkGray),
                     ),
                   ],
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Style.colorBlue
+                      borderRadius: BorderRadius.circular(18.0),
+                      color: Style.colorLightGray
                   ),
                   child: const Icon(
                     Icons.keyboard_arrow_right,
-                    color: Style.colorWhite,
+                    color: Style.colorBlue,
                   ),
                 )
               ],

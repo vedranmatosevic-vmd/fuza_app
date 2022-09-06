@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fuza_app/models/MembershipFee.dart';
 import 'package:fuza_app/models/Player.dart';
+import 'package:fuza_app/screens/fees_by_month/fees_by_month.dart';
 import 'package:fuza_app/screens/member_fee/components/section_title.dart';
 import 'package:fuza_app/size_config.dart';
 
@@ -61,6 +62,9 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
       debugPrint("Vedran... element: ${MembershipFee.fromSnapshot(element).value}");
     }
 
+    // Nastaviti sa sortiranjem
+    membershipFees.sort((b, a) => a.dateOfPayment.compareTo(b.dateOfPayment));
+
     return Column(
         children: [
           const SectionTitle(title: 'Članarine po mjesecima',),
@@ -103,86 +107,93 @@ class MembershipFeeByMonthCard extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: EdgeInsets.only(left: getProportionateScreenWidth(20.0)),
-      child: Container(
-        width: getProportionateScreenWidth(320.0),
-        padding: EdgeInsets.all(getProportionateScreenWidth(16.0)),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(getProportionateScreenWidth(20.0)),
-            color: Style.colorWhite
-        ),
-        child: Column(
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  '${months[month - 1]}, $year.',
-                  style: Style.getTextStyle(context, StyleText.headlineThreeMedium, StyleColor.extraDarkGray),
-                )
-              ],
-            ),
-            SizedBox(height: getProportionalScreenHeight(16.0),),
-            Divider(
-              height: getProportionalScreenHeight(1.0),
-              color: Style.colorLightGray,
-            ),
-            SizedBox(height: getProportionalScreenHeight(16.0),),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(4.0)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FeesByMonth(month: month)));
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(20.0)),
+        child: Container(
+          width: getProportionateScreenWidth(320.0),
+          padding: EdgeInsets.all(getProportionateScreenWidth(16.0)),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(getProportionateScreenWidth(20.0)),
+              color: Style.colorWhite
+          ),
+          child: Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.account_balance,
-                            color: Style.colorBlue,
-                          ),
-                          SizedBox(width: getProportionateScreenWidth(10.0),),
-                          Text(
-                            '$sum kn',
-                            style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: getProportionalScreenHeight(12.0),),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.assessment_outlined,
-                            color: Style.colorBlue,
-                          ),
-                          SizedBox(width: getProportionateScreenWidth(10.0),),
-                          Text(
-                              '$count',
-                            style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(12.0), vertical: getProportionalScreenHeight(10.0)),
-                    decoration: BoxDecoration(
-                        color: Style.colorLightGray,
-                        borderRadius: BorderRadius.circular(getProportionateScreenWidth(64.0))
-                    ),
-                    child: SvgPicture.asset(
-                      "assets/icons/ic_arrow_right.svg",
-                      width: getProportionateScreenWidth(20.0),
-                      height: getProportionalScreenHeight(20.0),
-                    ),
+
+                  Text(
+                    '${months[month - 1]}, $year.',
+                    style: Style.getTextStyle(context, StyleText.headlineThreeMedium, StyleColor.extraDarkGray),
                   )
                 ],
               ),
-            )
-          ],
+              SizedBox(height: getProportionalScreenHeight(16.0),),
+              Divider(
+                height: getProportionalScreenHeight(1.0),
+                color: Style.colorLightGray,
+              ),
+              SizedBox(height: getProportionalScreenHeight(16.0),),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(4.0)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.account_balance,
+                              color: Style.colorBlue,
+                            ),
+                            SizedBox(width: getProportionateScreenWidth(10.0),),
+                            Text(
+                              '$sum kn',
+                              style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: getProportionalScreenHeight(12.0),),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.assessment_outlined,
+                              color: Style.colorBlue,
+                            ),
+                            SizedBox(width: getProportionateScreenWidth(10.0),),
+                            Text(
+                                '$count',
+                              style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(12.0), vertical: getProportionalScreenHeight(10.0)),
+                      decoration: BoxDecoration(
+                          color: Style.colorBlue,
+                          borderRadius: BorderRadius.circular(getProportionateScreenWidth(64.0))
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/icons/ic_arrow_right.svg",
+                        width: getProportionateScreenWidth(20.0),
+                        height: getProportionalScreenHeight(20.0),
+                        color: Style.colorWhite,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
