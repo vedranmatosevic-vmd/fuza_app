@@ -7,6 +7,7 @@ import 'package:fuza_app/screens/fees_by_month/fees_by_month.dart';
 import 'package:fuza_app/screens/member_fee/components/section_title.dart';
 import 'package:fuza_app/size_config.dart';
 
+import '../../../constants.dart';
 import '../../../repository/data_repository.dart';
 import '../../../style.dart';
 
@@ -95,7 +96,6 @@ class MembershipFeeByMonthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final months = <String>["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"];
 
     var sum = 0;
     var count = 0;

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fuza_app/constants.dart';
 
 import '../../../models/MembershipFee.dart';
 import '../../../repository/data_repository.dart';
@@ -47,12 +48,20 @@ class _BodyState extends State<Body> {
       debugPrint("Vedran... element: ${MembershipFee.fromSnapshot(element).value}");
     }
 
+    membershipFees.sort((a, b) => b.dateOfPayment.millisecondsSinceEpoch.compareTo(a.dateOfPayment.millisecondsSinceEpoch));
+
     return Column(
       children: <Widget>[
         SizedBox(height: getProportionalScreenHeight(MediaQuery.of(context).viewPadding.top + 20.0),),
         const Header(),
         SizedBox(height: getProportionalScreenHeight(24.0),),
-        ...List.generate(membershipFees.length, (index) => FeeCard(membershipFee: membershipFees[index]))
+        Text(
+          'Članarine za ${months[widget.month - 1]}',
+          style: Style.getTextStyle(context, StyleText.headlineThreeMedium, StyleColor.black),
+        ),
+        SizedBox(height: getProportionalScreenHeight(24.0),),
+        ...List.generate(membershipFees.length, (index) => FeeCard(membershipFee: membershipFees[index])),
+        SizedBox(height: getProportionalScreenHeight(50.0)),
       ],
     );
   }
@@ -74,8 +83,7 @@ class FeeCard extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: getProportionateScreenWidth(56.0),
-              height: getProportionalScreenHeight(48.0),
+              padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0), vertical: getProportionalScreenHeight(6.0)),
               decoration: BoxDecoration(
                 color: Style.colorUltraLightBlue,
                 borderRadius: BorderRadius.circular(10.0)
@@ -84,11 +92,11 @@ class FeeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '${membershipFee.value}',
+                    membershipFee.dateOfPaymentToString(),
                     style: Style.getTextStyle(context, StyleText.bodyThreeBold, StyleColor.blue),
                   ),
                   Text(
-                    'kn',
+                    '${membershipFee.value} kn',
                     style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
                   )
                 ],

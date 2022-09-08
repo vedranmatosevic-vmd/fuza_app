@@ -49,16 +49,9 @@ class PlayerCard extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18.0),
-                      color: Style.colorLightGray
-                  ),
-                  child: const Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Style.colorBlue,
-                  ),
+                const Icon(
+                  Icons.keyboard_arrow_right,
+                  color: Style.colorBlue,
                 )
               ],
             ),

@@ -33,6 +33,10 @@ class MembershipFee {
   String toString() {
     return 'Membership Fee<$dateOfPayment>';
   }
+
+  String dateOfPaymentToString() {
+    return "${dateOfPayment.day}.${dateOfPayment.month}.";
+  }
 }
 
 MembershipFee _membershipFeeFromJson(Map<String, dynamic> json) {

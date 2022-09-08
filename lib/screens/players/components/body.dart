@@ -31,7 +31,27 @@ class _BodyState extends State<Body> {
   Widget _buildList(BuildContext context, List<DocumentSnapshot>? snapshot) {
     return ListView(
       padding: EdgeInsets.symmetric(vertical:  getProportionalScreenHeight(20.0)),
-      children: snapshot!.map((data) => _buildListItem(context, data)).toList(),
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            SizedBox(width: getProportionateScreenWidth(20.0)),
+            Icon(
+              Icons.people,
+              size: 28,
+              color: Style.colorBlue,
+            ),
+            SizedBox(width: getProportionateScreenWidth(10.0)),
+            Text(
+              'Ukupno članova: ${snapshot?.length}',
+              style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
+            )
+          ],
+        ),
+        SizedBox(height: getProportionalScreenHeight(12.0)),
+        Column(
+          children: snapshot!.map((data) => _buildListItem(context, data)).toList(),
+        )
+      ],
     );
   }
 
