@@ -63,6 +63,7 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
     }
 
     // Nastaviti sa sortiranjem
+
     membershipFees.sort((b, a) => a.dateOfPayment.compareTo(b.dateOfPayment));
 
     return Column(
