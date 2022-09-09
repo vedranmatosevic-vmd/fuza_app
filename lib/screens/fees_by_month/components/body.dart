@@ -26,7 +26,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20.0)),
+        padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0)),
         child: SingleChildScrollView(
           child: StreamBuilder<QuerySnapshot>(
             stream: repository.getMemberShipFeesByMonthStream(widget.month),
@@ -82,6 +82,12 @@ class FeeCard extends StatelessWidget {
         SizedBox(height: getProportionalScreenHeight(8.0),),
         Row(
           children: [
+            Icon(
+              membershipFee.bankAccount! ? Icons.credit_card_outlined : Icons.attach_money_outlined,
+              size: 20,
+              color: Style.colorBlue,
+            ),
+            SizedBox(width: getProportionateScreenWidth(4.0),),
             Container(
               padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0), vertical: getProportionalScreenHeight(6.0)),
               decoration: BoxDecoration(
@@ -95,9 +101,13 @@ class FeeCard extends StatelessWidget {
                     membershipFee.dateOfPaymentToString(),
                     style: Style.getTextStyle(context, StyleText.bodyThreeBold, StyleColor.blue),
                   ),
-                  Text(
-                    '${membershipFee.value} kn',
-                    style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
+                  Row(
+                    children: [
+                      Text(
+                        '${membershipFee.value} kn',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -108,11 +118,11 @@ class FeeCard extends StatelessWidget {
               children: [
                 Text(
                   membershipFee.players[0].toString(),
-                  style: Style.getTextStyle(context, StyleText.bodyTwoMedium),
+                  style: Style.getTextStyle(context, StyleText.bodyThreeMedium),
                 ),
                 Text(
                   membershipFee.players[0].bDayToString(),
-                  style: Style.getTextStyle(context, StyleText.bodyThreeMedium, StyleColor.darkGray),
+                  style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
                 )
               ],
             ),

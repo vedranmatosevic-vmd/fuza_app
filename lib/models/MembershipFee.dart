@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../constants.dart';
 import 'Player.dart';
 
 class MembershipFee {
@@ -9,6 +10,7 @@ class MembershipFee {
   final DateTime dateOfPayment;
   final String? description;
   final int month;
+  final bool? bankAccount;
 
   MembershipFee({
     this.id,
@@ -16,7 +18,8 @@ class MembershipFee {
     required this.players,
     required this.dateOfPayment,
     required this.description,
-    required this.month
+    required this.month,
+    this.bankAccount = false
   });
 
   factory MembershipFee.fromSnapshot(DocumentSnapshot snapshot) {
@@ -45,6 +48,7 @@ MembershipFee _membershipFeeFromJson(Map<String, dynamic> json) {
     dateOfPayment: (json['dateOfPayment'] as Timestamp).toDate(),
     description: json['description'] as String,
     month: json['month'] as int,
+    bankAccount: json['bankAccount'] as bool?,
     players: _convertPlayers(json['players'] as List<dynamic>)
   );
 }
@@ -64,6 +68,7 @@ Map<String, dynamic> _membershipFeeToJson(MembershipFee instance) => <String, dy
   'dateOfPayment': instance.dateOfPayment,
   'description': instance.description,
   'month': instance.month,
+  'bankAccount': instance.bankAccount,
   'players': _playerList(instance.players),
 };
 

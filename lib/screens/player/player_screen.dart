@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../style.dart';
+import 'components/body.dart';
 
 class PlayerScreen extends StatelessWidget {
   const PlayerScreen({Key? key}) : super(key: key);
@@ -10,14 +11,8 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Style.colorBlue,
-        title: Text(
-          "Futsal škola Zagi",
-        ),
-        actions: <Widget>[
-        ],
-      ),
+      backgroundColor: Style.colorLightGray,
+      body: Body(),
     );
   }
 }

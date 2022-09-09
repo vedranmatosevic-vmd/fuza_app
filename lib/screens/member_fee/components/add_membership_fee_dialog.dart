@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fuza_app/constants.dart';
 import 'package:fuza_app/models/MembershipFee.dart';
 import 'package:fuza_app/models/Player.dart';
 import 'package:fuza_app/repository/data_repository.dart';
@@ -22,7 +26,7 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
   String? selectedValue;
-
+  bool switchValue = false;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -51,8 +55,26 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
     return SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              SizedBox(height: getProportionalScreenHeight(32.0),),
+              SizedBox(height: getProportionalScreenHeight(8.0),),
               // buildNameFormField(context),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Račun:',
+                    style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                  ),
+                  Switch(
+                    value: switchValue,
+                    onChanged: (value) {
+                      setState(() {
+                        switchValue = value;
+                      });
+                    }
+                  )
+                ],
+              ),
+              SizedBox(height: getProportionalScreenHeight(8.0),),
               DropdownButtonHideUnderline(
                 child: DropdownButtonFormField2(
                   hint: Text("Igrač", style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),),
@@ -80,24 +102,22 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
                   onChanged: (value) {
                     setState(() {
                       selectedValue = value as String?;
-                      // TODO VEDRAN find way to save player
                     });
                   },
                 ),
               ),
-              SizedBox(height: getProportionalScreenHeight(16.0),),
+              SizedBox(height: getProportionalScreenHeight(8.0),),
               buildMonthFormField(context),
-              SizedBox(height: getProportionalScreenHeight(16.0),),
+              SizedBox(height: getProportionalScreenHeight(8.0),),
               buildAmountFormField(context),
-              SizedBox(height: getProportionalScreenHeight(16.0),),
+              SizedBox(height: getProportionalScreenHeight(8.0),),
               buildRemarkFormField(context),
-              SizedBox(height: getProportionalScreenHeight(32.0),),
+              SizedBox(height: getProportionalScreenHeight(20.0),),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      debugPrint("Vedran... user: $selectedValue");
                       Player? newPlayer;
                       for (var element in players) {
                         if (element.equals(selectedValue!)) {
@@ -112,6 +132,7 @@ class _AddMembershipFeeDialogState extends State<AddMembershipFeeDialog> {
                             players: listOfPlayers,
                             dateOfPayment: DateTime.now(),
                             description: _remarkController.text,
+                            bankAccount: switchValue,
                             month: int.parse(_monthController.text)
                         );
                         repository.addMembershipFee(newMembershipFee);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fuza_app/screens/player/player_screen.dart';
+import 'package:fuza_app/screens/players/players_screen.dart';
 
 import '../models/Player.dart';
 import '../size_config.dart';
@@ -17,7 +19,9 @@ class PlayerCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, PlayerScreen.routeName);
+            },
             child: Row(
               children: <Widget>[
                 Container(
