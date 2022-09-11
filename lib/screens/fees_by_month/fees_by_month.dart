@@ -10,6 +10,8 @@ class FeesByMonth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Body(month: month);
+    return Scaffold(
+      body: Body(month: month)
+    );
   }
 }

@@ -44,6 +44,16 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
   final DataRepository repository = DataRepository();
   final sortedMonths = <int>[8,9,10,11,12,1,2,3,4,5,6,7];
   final numOfMonths = 11;
+
+  late ScrollController controller;
+  final selectedItemKey = GlobalKey();
+
+  @override
+  void initState() {
+    controller = ScrollController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -63,21 +73,29 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
       debugPrint("Vedran... element: ${MembershipFee.fromSnapshot(element).value}");
     }
 
-    // Nastaviti sa sortiranjem
-
     membershipFees.sort((b, a) => a.dateOfPayment.compareTo(b.dateOfPayment));
+
+    if (controller.positions.isNotEmpty) {
+      controller.position.ensureVisible(
+          selectedItemKey.currentContext!.findRenderObject()!,
+          alignment: 0.25,
+          duration: const Duration(milliseconds: 500));
+    }
 
     return Column(
         children: [
           const SectionTitle(title: 'Članarine po mjesecima',),
           SizedBox(height: getProportionalScreenHeight(16.0),),
           SingleChildScrollView(
+            controller: controller,
             scrollDirection: Axis.horizontal,
             child: Row(
               children: <Widget>[
+                SizedBox(width: getProportionateScreenWidth(4.0),),
                 ...List.generate(sortedMonths.length, (index) => MembershipFeeByMonthCard(
                   membershipFees: membershipFees,
                   month: sortedMonths[index],
+                  itemKey: sortedMonths[index] == DateTime.now().month ? selectedItemKey : null,
                 )),
                 SizedBox(width: getProportionateScreenWidth(20.0),)
               ],
@@ -89,21 +107,27 @@ class _MembershipFeesByMonthsState extends State<MembershipFeesByMonths> {
 }
 
 class MembershipFeeByMonthCard extends StatelessWidget {
-  const MembershipFeeByMonthCard({Key? key, required this.membershipFees, required this.month}) : super(key: key);
+  const MembershipFeeByMonthCard({Key? key, required this.membershipFees, required this.month, this.itemKey}) : super(key: key);
 
   final List<MembershipFee> membershipFees;
   final int month;
+  final GlobalKey? itemKey;
 
   @override
   Widget build(BuildContext context) {
 
-    var sum = 0;
+    var sumInCash = 0;
     var count = 0;
+    var sumInBank = 0;
     var year = month > 7 && month <= 12 ? DateTime.now().year : DateTime.now().year + 1;
 
     for (var element in membershipFees) {
       if (element.month == month) {
-        sum += element.value;
+        if (element.bankAccount!) {
+          sumInBank += element.value;
+        } else {
+          sumInCash += element.value;
+        }
         count++;
       }
     }
@@ -113,7 +137,8 @@ class MembershipFeeByMonthCard extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => FeesByMonth(month: month)));
       },
       child: Padding(
-        padding: EdgeInsets.only(left: getProportionateScreenWidth(20.0)),
+        key: itemKey,
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(16.0)),
         child: Container(
           width: getProportionateScreenWidth(320.0),
           padding: EdgeInsets.all(getProportionateScreenWidth(16.0)),
@@ -122,11 +147,11 @@ class MembershipFeeByMonthCard extends StatelessWidget {
               color: Style.colorWhite
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-
                   Text(
                     '${months[month - 1]}, $year.',
                     style: Style.getTextStyle(context, StyleText.headlineThreeMedium, StyleColor.extraDarkGray),
@@ -134,6 +159,51 @@ class MembershipFeeByMonthCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: getProportionalScreenHeight(16.0),),
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Račun',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeMedium, StyleColor.extraDarkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(4.0)),
+                      Text(
+                        '${sumInBank.toStringAsFixed(2)} HRK',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(4.0)),
+                      Text(
+                          '${(sumInBank / 7.53).toStringAsFixed(2)} EUR',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(12.0)),
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Gotovina',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeMedium, StyleColor.extraDarkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(4.0)),
+                      Text(
+                        '${sumInCash.toStringAsFixed(2)} HRK',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(4.0)),
+                      Text(
+                        '${(sumInCash / 7.53).toStringAsFixed(2)} EUR',
+                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
+                      ),
+                      SizedBox(height: getProportionalScreenHeight(12.0)),
+                    ],
+                  ),
+                ],
+              ),
               Divider(
                 height: getProportionalScreenHeight(1.0),
                 color: Style.colorLightGray,
@@ -150,13 +220,13 @@ class MembershipFeeByMonthCard extends StatelessWidget {
                         Row(
                           children: <Widget>[
                             Icon(
-                              Icons.account_balance,
+                              Icons.account_balance_sharp,
                               color: Style.colorBlue,
                             ),
                             SizedBox(width: getProportionateScreenWidth(10.0),),
                             Text(
-                              '$sum kn',
-                              style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
+                              '${(sumInBank + sumInCash).toStringAsFixed(2)} HRK / ${((sumInBank + sumInCash) / 7.53).toStringAsFixed(2)} EUR',
+                              style: Style.getTextStyle(context, StyleText.bodyFiveRegular, StyleColor.extraDarkGray),
                             )
                           ],
                         ),
@@ -169,8 +239,8 @@ class MembershipFeeByMonthCard extends StatelessWidget {
                             ),
                             SizedBox(width: getProportionateScreenWidth(10.0),),
                             Text(
-                                '$count',
-                              style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.extraDarkGray),
+                              '$count',
+                              style: Style.getTextStyle(context, StyleText.bodyFiveRegular, StyleColor.extraDarkGray),
                             )
                           ],
                         )

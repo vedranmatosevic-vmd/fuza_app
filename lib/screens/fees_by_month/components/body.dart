@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fuza_app/constants.dart';
+import 'package:fuza_app/screens/fee/fee_screen.dart';
 
 import '../../../models/MembershipFee.dart';
 import '../../../repository/data_repository.dart';
@@ -24,8 +25,8 @@ class _BodyState extends State<Body> {
   final DataRepository repository = DataRepository();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return SafeArea(
+      child: Padding(
         padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0)),
         child: SingleChildScrollView(
           child: StreamBuilder<QuerySnapshot>(
@@ -52,7 +53,7 @@ class _BodyState extends State<Body> {
 
     return Column(
       children: <Widget>[
-        SizedBox(height: getProportionalScreenHeight(MediaQuery.of(context).viewPadding.top + 20.0),),
+        SizedBox(height: getProportionalScreenHeight(16.0)),
         const Header(),
         SizedBox(height: getProportionalScreenHeight(24.0),),
         Text(
@@ -80,61 +81,62 @@ class FeeCard extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: getProportionalScreenHeight(8.0),),
-        Row(
-          children: [
-            Icon(
-              membershipFee.bankAccount! ? Icons.credit_card_outlined : Icons.attach_money_outlined,
-              size: 20,
-              color: Style.colorBlue,
-            ),
-            SizedBox(width: getProportionateScreenWidth(4.0),),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0), vertical: getProportionalScreenHeight(6.0)),
-              decoration: BoxDecoration(
-                color: Style.colorUltraLightBlue,
-                borderRadius: BorderRadius.circular(10.0)
+        InkWell(
+          onTap: () => Navigator.pushNamed(context, FeeScreen.routeName, arguments: membershipFee),
+          child: Row(
+            children: [
+              Icon(
+                membershipFee.bankAccount! ? Icons.credit_card_outlined : Icons.attach_money_outlined,
+                size: 20,
+                color: Style.colorBlue,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+              SizedBox(width: getProportionateScreenWidth(4.0),),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0), vertical: getProportionalScreenHeight(6.0)),
+                decoration: BoxDecoration(
+                  color: Style.colorUltraLightBlue,
+                  borderRadius: BorderRadius.circular(10.0)
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      membershipFee.dateOfPaymentToString(),
+                      style: Style.getTextStyle(context, StyleText.bodyThreeBold, StyleColor.blue),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '${membershipFee.value} kn',
+                          style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(width: getProportionateScreenWidth(6.0),),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    membershipFee.dateOfPaymentToString(),
-                    style: Style.getTextStyle(context, StyleText.bodyThreeBold, StyleColor.blue),
+                    membershipFee.players[0].toString(),
+                    style: Style.getTextStyle(context, StyleText.bodyThreeMedium),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        '${membershipFee.value} kn',
-                        style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.blue),
-                      ),
-                    ],
+                  Text(
+                    membershipFee.players[0].bDayToString(),
+                    style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
                   )
                 ],
               ),
-            ),
-            SizedBox(width: getProportionateScreenWidth(6.0),),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  membershipFee.players[0].toString(),
-                  style: Style.getTextStyle(context, StyleText.bodyThreeMedium),
-                ),
-                Text(
-                  membershipFee.players[0].bDayToString(),
-                  style: Style.getTextStyle(context, StyleText.bodyThreeRegular, StyleColor.darkGray),
-                )
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
+              const Spacer(),
+              const Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: Style.colorBlue,
-              )
-            )
-          ],
+              ),
+              SizedBox(width: getProportionateScreenWidth(8.0))
+            ],
+          ),
         ),
         SizedBox(height: getProportionalScreenHeight(8.0),),
         Divider(

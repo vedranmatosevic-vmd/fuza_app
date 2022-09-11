@@ -4,12 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fuza_app/constants.dart';
 import 'package:fuza_app/models/MembershipFee.dart';
 import 'package:fuza_app/models/Player.dart';
 import 'package:fuza_app/repository/data_repository.dart';
 import 'package:fuza_app/size_config.dart';
-import 'package:intl/intl.dart';
 
 import '../../../style.dart';
 
