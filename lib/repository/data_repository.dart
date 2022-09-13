@@ -8,7 +8,7 @@ class DataRepository {
   final CollectionReference membershipFeeCollection = FirebaseFirestore.instance.collection('membership_fees');
 
   Stream<QuerySnapshot> getPlayersStream() {
-    return playersCollection.snapshots();
+    return playersCollection.orderBy("name").snapshots();
   }
 
   Future<DocumentReference> addPlayer(Player player) {

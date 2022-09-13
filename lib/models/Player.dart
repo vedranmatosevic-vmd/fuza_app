@@ -35,6 +35,11 @@ class Player {
   String bDayToString() {
     return "${bDay?.day}.${bDay?.month}.${bDay?.year}.";
   }
+
+  String bDayToStringFormat() {
+    return "${bDay?.day}.${bDay?.month}.${bDay?.year}";
+  }
+
 }
 
 Player _playerFromJson(Map<String, dynamic> json) {

@@ -64,6 +64,14 @@ class _FeeFormState extends State<FeeForm> {
   }
 
   @override
+  void dispose() {
+    _monthController.dispose();
+    _amountController.dispose();
+    _remarkController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(

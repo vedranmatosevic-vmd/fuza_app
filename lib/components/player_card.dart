@@ -14,13 +14,17 @@ class PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10.0)),
-      child: Card(
+      padding: EdgeInsets.fromLTRB(getProportionateScreenWidth(10.0), 0, getProportionateScreenWidth(10.0), getProportionalScreenHeight(10.0)),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Style.colorWhite,
+            borderRadius: BorderRadius.circular(12.0)
+        ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, PlayerScreen.routeName);
+              Navigator.pushNamed(context, PlayerScreen.routeName, arguments: player);
             },
             child: Row(
               children: <Widget>[

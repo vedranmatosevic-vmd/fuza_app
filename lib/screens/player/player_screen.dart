@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/Player.dart';
 import '../../style.dart';
 import 'components/body.dart';
 
@@ -10,9 +11,9 @@ class PlayerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final player = ModalRoute.of(context)!.settings.arguments as Player;
     return Scaffold(
-      backgroundColor: Style.colorLightGray,
-      body: Body(),
+      body: Body(player: player),
     );
   }
 }

@@ -18,11 +18,20 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _bDayController = TextEditingController();
+
   String? name;
   String? lastName;
   DateTime? bDay;
 
   final DataRepository repository = DataRepository();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _bDayController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

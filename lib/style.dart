@@ -207,7 +207,7 @@ class Style {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // TEXT STYLES
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  static TextStyle getTextStyle(BuildContext context, StyleText styleText, [StyleColor? color, double? lineHeight]) {
+  static TextStyle getTextStyle(BuildContext context, StyleText styleText, [StyleColor? color, double? lineHeight, bool? isUnderline, bool? isItalic]) {
     switch (styleText) {
     // HeadLine
       case StyleText.headlineOneSemiBold:
@@ -299,7 +299,9 @@ class Style {
             fontWeight: FontWeight.w400,
             fontSize: 12.0,
             height: lineHeight,
-            color: getColor(context, color)
+            color: getColor(context, color),
+            decoration: isUnderline != null ? TextDecoration.underline : null,
+            fontStyle: isItalic != null ? FontStyle.italic : null,
         );
       case StyleText.bodyFourMedium:
         color ??= StyleColor.black;
