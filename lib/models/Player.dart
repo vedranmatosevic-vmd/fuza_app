@@ -5,12 +5,14 @@ class Player {
   final String name;
   final String lastName;
   final DateTime? bDay;
+  final String? image;
 
   Player({
     this.id,
     required this.name,
     required this.lastName,
-    required this.bDay
+    required this.bDay,
+    this.image = ""
   });
 
   factory Player.fromSnapshot(DocumentSnapshot snapshot) {
@@ -46,6 +48,7 @@ Player _playerFromJson(Map<String, dynamic> json) {
   return Player(
     name: json['name'] as String,
     lastName: json['lastName'] as String,
+    image: json['image'] as String?,
     bDay: (json['bDay'] as Timestamp).toDate()
   );
 }
@@ -54,5 +57,6 @@ Map<String, dynamic> _playerToJson(Player instance) =>
     <String, dynamic>{
       'name': instance.name,
       'lastName': instance.lastName,
+      'image': instance.image,
       'bDay': instance.bDay,
     };

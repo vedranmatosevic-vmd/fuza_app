@@ -41,6 +41,11 @@ dependencies:
   cloud_firestore: ^3.4.5
   intl: ^0.17.0
   dropdown_button2: ^1.7.2
+  file_picker: ^3.0.4
+  firebase_storage: ^10.3.8
+  image_picker: ^0.8.5+3
+  flutter_image_compress: ^1.1.2
+  flutter_native_image: ^0.0.6+1
 
 dev_dependencies:
   flutter_test:

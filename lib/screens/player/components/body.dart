@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:fuza_app/screens/player/components/player_actions.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/Player.dart';
@@ -50,6 +57,51 @@ class _PlayerFormState extends State<PlayerForm> {
 
   final DataRepository repository = DataRepository();
 
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future uploadFile() async {
+    final path = 'files/images/profileImages/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+
+    File compressedFile = await FlutterNativeImage.compressImage(pickedFile!.path!, quality: 20);
+
+    setState(() {
+      uploadTask = ref.putFile(compressedFile);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    print('Download link: $urlDownload');
+
+    Player newPlayer = Player(
+        id: widget.player.id,
+        name: _nameController.text,
+        lastName: _lastNameController.text,
+        bDay: DateFormat("dd.MM.yyyy").parse(_bDayController.text),
+        image: urlDownload
+    );
+
+    repository.updatePlayer(newPlayer);
+
+    setState(() {
+      uploadTask = null;
+    });
+  }
+
   @override
   void initState() {
     _nameController.text = widget.player.name;
@@ -72,11 +124,30 @@ class _PlayerFormState extends State<PlayerForm> {
       child: Column(
         children: <Widget>[
           SizedBox(height: getProportionalScreenHeight(22.0),),
-          InkWell(
-            onTap: () {},
+          pickedFile == null && widget.player.image!.isEmpty ? InkWell(
+            onTap: () {
+              selectFile();
+            },
             child: Text(
               'Upload photo',
               style: Style.getTextStyle(context, StyleText.bodyFourRegular, StyleColor.black, null, true, true),
+            ),
+          ) : Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: widget.player.image!.isNotEmpty
+                  ? Image.network(
+                    widget.player.image!,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.fitWidth,
+                  )
+                  : Image.file(
+                    File(pickedFile!.path!),
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.fitWidth,
+                  ),
             ),
           ),
           SizedBox(height: getProportionalScreenHeight(46.0),),
@@ -89,13 +160,7 @@ class _PlayerFormState extends State<PlayerForm> {
           const Spacer(),
           TextButton(
             onPressed: () {
-              Player newPlayer = Player(
-                  id: widget.player.id,
-                  name: _nameController.text,
-                  lastName: _lastNameController.text,
-                  bDay: DateFormat("dd.MM.yyyy").parse(_bDayController.text)
-              );
-              repository.updatePlayer(newPlayer);
+              uploadFile();
               Navigator.pop(context);
             },
             child: Container(

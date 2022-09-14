@@ -28,17 +28,25 @@ class PlayerCard extends StatelessWidget {
             },
             child: Row(
               children: <Widget>[
-                Container(
-                  width: 34.0,
-                  height: 34.0,
-                  decoration: BoxDecoration(
-                      color: Style.colorLightGray,
-                      borderRadius: BorderRadius.circular(27.0)
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    size: 32.0,
-                    color: Style.colorWhite,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: player.image!.isEmpty ? Container(
+                    width: 34.0,
+                    height: 34.0,
+                    decoration: BoxDecoration(
+                        color: Style.colorLightGray,
+                        borderRadius: BorderRadius.circular(17.0)
+                    ),
+                    child: const Icon(
+                      Icons.person,
+                      size: 34.0,
+                      color: Style.colorWhite,
+                    ),
+                  ) : Image.network(
+                    player.image!,
+                    width: 34.0,
+                    height: 34.0,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(width: getProportionateScreenWidth(12.0),),
