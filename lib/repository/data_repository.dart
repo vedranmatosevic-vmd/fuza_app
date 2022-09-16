@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/MembershipFee.dart';
 import '../models/Player.dart';
 
+String playersPath = FirebaseAuth.instance.currentUser!.email == "ivan.matan2406@gmail.com" ? 'dubrava_players' : 'players';
+String feesPath = FirebaseAuth.instance.currentUser!.email == "ivan.matan2406@gmail.com" ? 'dubrava_membership_fees' : 'membership_fees';
+
 class DataRepository {
-  final CollectionReference playersCollection = FirebaseFirestore.instance.collection('players');
-  final CollectionReference membershipFeeCollection = FirebaseFirestore.instance.collection('membership_fees');
+  final CollectionReference playersCollection = FirebaseFirestore.instance.collection(playersPath);
+  final CollectionReference membershipFeeCollection = FirebaseFirestore.instance.collection(feesPath);
 
   Stream<QuerySnapshot> getPlayersStream() {
     return playersCollection.orderBy("name").snapshots();

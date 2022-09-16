@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fuza_app/routes.dart';
 import 'package:fuza_app/screens/home/home_screen.dart';
+import 'package:fuza_app/screens/login/login_screen.dart';
+import 'package:fuza_app/screens/splash/splash_screen.dart';
 import 'theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Futsal škola Zagi',
       theme: theme(),
-      initialRoute: HomeScreen.routeName,
+      initialRoute: SplashScreen.routeName,
       routes: routes,
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -70,7 +71,8 @@ class _PlayerFormState extends State<PlayerForm> {
   }
 
   Future uploadFile() async {
-    final path = 'files/images/profileImages/${pickedFile!.name}';
+    String imagePath = FirebaseAuth.instance.currentUser!.email == "ivan.matan2406@gmail.com" ? 'dubravaImages' : 'images';
+    final path = 'files/$imagePath/profileImages/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
 
     final ref = FirebaseStorage.instance.ref().child(path);
