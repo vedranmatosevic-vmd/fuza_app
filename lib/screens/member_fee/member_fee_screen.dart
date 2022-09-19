@@ -16,6 +16,7 @@ class _MemberFeeScreenState extends State<MemberFeeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Style.colorBlue,
         title: Text(
           "Futsal škola Zagi",

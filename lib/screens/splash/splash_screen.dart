@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 2), () {
       isLoggedIn().then((value) =>
       {
-        value ? Navigator.pushNamed(context, HomeScreen.routeName) :
+        !value ? Navigator.pushNamed(context, HomeScreen.routeName) :
         Navigator.pushNamed(context, LoginScreen.routeName)
       });
     });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fuza_app/screens/home/home_screen.dart';
 import 'package:fuza_app/size_config.dart';
 
+import '../../../service/login_service.dart';
 import '../../../style.dart';
 
 class Body extends StatelessWidget {
@@ -34,6 +35,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  LoginService loginService = LoginService();
   final key = GlobalKey();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -87,6 +89,7 @@ class _LoginFormState extends State<LoginForm> {
     );
     if (FirebaseAuth.instance.currentUser != null) {
       if (mounted) {
+        loginService.setIsLoggedIn(true);
         await Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
       }
     }
